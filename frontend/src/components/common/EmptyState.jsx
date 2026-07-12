@@ -9,18 +9,18 @@ export default function EmptyState({
   className,
 }) {
   return (
-    <div className={clsx('flex flex-col items-center justify-center py-16 px-4 text-center', className)}>
+    <div className={clsx('flex flex-col items-center justify-center rounded-[24px] border border-dashed border-slate-300/70 bg-white/70 px-6 py-16 text-center shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/60', className)}>
       {Icon && (
-        <div className="mb-4 rounded-full bg-gray-100 dark:bg-gray-800 p-4">
-          <Icon className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+        <div className="mb-4 rounded-full bg-gradient-to-br from-blue-600/10 to-violet-600/10 p-4 text-blue-600 dark:text-blue-400">
+          <Icon className="h-8 w-8" />
         </div>
       )}
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{title}</h3>
+      <h3 className="mb-1 text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
       {description && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">{description}</p>
+        <p className="mb-6 max-w-sm text-sm text-slate-500 dark:text-slate-400">{description}</p>
       )}
       {actionLabel && onAction && (
-        <button onClick={onAction} className="btn btn-primary">
+        <button onClick={onAction} className="btn btn-primary rounded-full">
           {actionLabel}
         </button>
       )}

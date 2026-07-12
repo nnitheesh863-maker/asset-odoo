@@ -22,19 +22,19 @@ export default function StatsCard({ title, value, icon: Icon, color = 'blue', tr
         : 'text-gray-400';
 
   return (
-    <div className="stat-card">
+    <div className="stat-card rounded-[24px] border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/70">
       <div className="flex items-center justify-between">
         <p className="stat-label">{title}</p>
         {Icon && (
-          <div className={clsx('rounded-lg p-2', colorMap[color] || colorMap.blue)}>
+          <div className={clsx('rounded-2xl p-2.5', colorMap[color] || colorMap.blue)}>
             <Icon className="h-5 w-5" />
           </div>
         )}
       </div>
-      <div className="flex items-end gap-2">
-        <p className="stat-value">{value}</p>
+      <div className="mt-3 flex items-end gap-2">
+        <p className="stat-value text-2xl sm:text-3xl">{value}</p>
         {trendValue !== undefined && (
-          <span className={clsx('flex items-center gap-0.5 text-xs font-medium mb-1', trendColor)}>
+          <span className={clsx('mb-1 flex items-center gap-0.5 text-xs font-medium', trendColor)}>
             <TrendIcon className="h-3.5 w-3.5" />
             {trendValue}
           </span>

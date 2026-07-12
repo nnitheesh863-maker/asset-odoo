@@ -39,18 +39,18 @@ export default function SearchInput({
 
   return (
     <div className={clsx('relative', className)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
       <input
         type="text"
         value={internalValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="input pl-10 pr-9"
+        className="input h-10 rounded-full border-slate-200 bg-white/90 pl-10 pr-9 shadow-sm transition focus:border-blue-500 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-900/80"
       />
       {internalValue && (
         <button
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
         >
           <X className="h-4 w-4" />
         </button>

@@ -16,4 +16,5 @@ const store = configureStore({
   devTools: import.meta.env.DEV,
 });
 
+export { store };
 export default store;
