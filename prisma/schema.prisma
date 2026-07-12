@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+}
+
+enum AssetStatus {
+  AVAILABLE
+  ALLOCATED
+  MAINTENANCE
+  RETIRED
+}
+
+enum AllocationStatus {
+  ACTIVE
+  RETURNED
+}
+
+model User {
+  id                 Int             @id @default(autoincrement())
+  name               String
+  email              String          @unique
+  password           String
+  phone              String?         @unique
+  role               Role            @default(EMPLOYEE)
+  status             UserStatus      @default(ACTIVE)
+  refreshToken       String?
+  resetPasswordToken String?
+  resetPasswordExpire DateTime?
+  departmentId       Int?
+  department         Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  employee           Employee?
+  activityLogs       ActivityLog[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@index([departmentId])
+}
+
+model Department {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  users       User[]
+  employees   Employee[]
+  assets      Asset[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([name])
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  assets      Asset[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([name])
+}
+
+model Employee {
+  id           Int               @id @default(autoincrement())
+  employeeCode String            @unique
+  userId       Int               @unique
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  departmentId Int
+  department   Department        @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  designation  String?
+  joinDate     DateTime          @default(now())
+  status       EmployeeStatus    @default(ACTIVE)
+  allocations  AssetAllocation[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([departmentId])
+  @@index([employeeCode])
+}
+
+model Asset {
+  id             Int               @id @default(autoincrement())
+  name           String
+  assetCode      String            @unique
+  description    String?
+  categoryId     Int
+  category       Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  departmentId   Int?
+  department     Department?       @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  status         AssetStatus       @default(AVAILABLE)
+  purchaseDate   DateTime?
+  purchasePrice  Float?
+  serialNumber   String?
+  location       String?
+  allocations    AssetAllocation[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([assetCode])
+  @@index([categoryId])
+  @@index([departmentId])
+  @@index([status])
+}
+
+model AssetAllocation {
+  id          Int              @id @default(autoincrement())
+  assetId     Int
+  asset       Asset            @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  employeeId  Int
+  employee    Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  allocatedAt DateTime         @default(now())
+  returnedAt  DateTime?
+  status      AllocationStatus @default(ACTIVE)
+  notes       String?
+
+  @@index([assetId])
+  @@index([employeeId])
+  @@index([status])
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
